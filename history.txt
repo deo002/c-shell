@@ -1,0 +1,21 @@
+20
+ls -a -l
+pinfo
+history
+history -1
+exit
+ls -a -l
+ls
+ls ..
+ls ~
+ls -a
+ls -l
+pwd
+pinfo
+nightswatch -n 5 hello
+nightswatch newborn
+nightswatch interrupt
+history 3
+history
+nightswatch hdhd
+exit
