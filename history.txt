@@ -1,16 +1,4 @@
 20
-ls -a -l
-pinfo
-history
-history -1
-exit
-ls -a -l
-ls
-ls ..
-ls ~
-ls -a
-ls -l
-pwd
 pinfo
 nightswatch -n 5 hello
 nightswatch newborn
@@ -18,4 +6,16 @@ nightswatch interrupt
 history 3
 history
 nightswatch hdhd
+exit
+pinfo
+ls
+pwd
+cd
+cd os/mkfiles
+history 6
+echo Good evening!
+pinfo
+ls -a -l
+pwd
+nightswatch -n 2 interrupt
 exit
