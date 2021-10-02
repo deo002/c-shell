@@ -1,21 +1,21 @@
 20
-pinfo
-nightswatch -n 5 hello
-nightswatch newborn
-nightswatch interrupt
-history 3
-history
-nightswatch hdhd
-exit
-pinfo
+jobs
+fg 1
+clear
+quit
 ls
-pwd
-cd
-cd os/mkfiles
-history 6
-echo Good evening!
-pinfo
-ls -a -l
-pwd
-nightswatch -n 2 interrupt
-exit
+clear
+emacs &
+jobs
+emacs
+jobs
+bg 2
+jobs
+fg 1
+jobs
+kill 1 9
+kill 9 1
+kjon 1 9
+kjob 1 9
+jobs
+quit

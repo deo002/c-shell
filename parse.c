@@ -1,7 +1,4 @@
 #include "headers.h"
-#include "parse.h"
-#include "execute_command.h"
-#include "builtin.h"
 
 int parse_command(char *cmd)
 {
@@ -9,71 +6,50 @@ int parse_command(char *cmd)
     {
         return EXIT_FAILURE;
     }
-    char *token = strtok(cmd, " \t\n");
 
-    char **arguments = (char **)malloc(MAX_ARG_NUM * sizeof(char *));
+    char **arguments = (char **)malloc(BUFFER_SIZE * sizeof(char *));
 
-    for (int i = 0; i < MAX_ARG_NUM; i++)
+    for (int i = 0; i < BUFFER_SIZE; ++i)
     {
-        arguments[i] = (char *)malloc(MAX_ARG_LEN * sizeof(char));
+        arguments[i] = (char *)malloc(BUFFER_SIZE);
 
         if (arguments[i] == NULL)
         {
-            fprintf(stderr, "Error allocating memory");
+            fprintf(stderr, "Error allocating memory\n");
 
-            for (int j = 0; j < i; j++)
+            for (int j = 0; j < i; ++j)
             {
                 free(arguments[j]);
             }
 
             free(arguments);
-
             return EXIT_FAILURE;
         }
     }
 
-    int arg_count = 0;
+    char delimiter[5];
+    delimiter[0] = ' ';
+    delimiter[1] = '\t';
+    delimiter[2] = '\n';
+    delimiter[3] = '\0';
 
-    if (strcmp(token, "exit") == 0)
+    int arg_count = tokenize_commands(cmd, delimiter, arguments);
+
+    if (arg_count == -1)
     {
-        exit(EXIT_SUCCESS);
-    }
-    else if (strcmp(token, "echo") == 0)
-    {
-        strcpy(arguments[arg_count++], token);
-        token = strtok(NULL, "\0");
-        if (token != NULL)
+        for (int i = 0; i < BUFFER_SIZE; ++i)
         {
-            strcpy(arguments[arg_count++], token);
+            free(arguments[i]);
         }
-    }
-    else
-    {
-        while (token != NULL)
-        {
-            strcpy(arguments[arg_count++], token);
 
-            if (arg_count + 1 >= MAX_ARG_NUM)
-            {
-                fprintf(stderr, "Argument limit exceeded\n");
+        free(arguments);
 
-                for (int i = 0; i < arg_count; i++)
-                {
-                    free(arguments[i]);
-                }
-
-                free(arguments);
-
-                return EXIT_FAILURE;
-            }
-
-            token = strtok(NULL, " \t\n");
-        }
+        return EXIT_FAILURE;
     }
 
     int res = execute_command(arguments, arg_count);
 
-    for (int i = 0; i < arg_count; i++)
+    for (int i = 0; i < BUFFER_SIZE; i++)
     {
         free(arguments[i]);
     }

@@ -1,6 +1,4 @@
 #include "headers.h"
-#include "execute_command.h"
-#include "builtin.h"
 
 int check_builtin_command(char *cmd)
 {
@@ -17,6 +15,8 @@ int check_builtin_command(char *cmd)
 
 int execute_command(char **args, int arg_count)
 {
+    strcpy(cmd_name, args[0]);
+
     int builtin_command = check_builtin_command(args[0]);
 
     int is_background = 0;
@@ -24,13 +24,18 @@ int execute_command(char **args, int arg_count)
     if (strcmp(args[arg_count - 1], "&") == 0)
     {
         is_background = 1;
+        --arg_count;
     }
 
-    if (builtin_command == -1)
+    if (builtin_command != -1)
     {
-        free(args[arg_count]);
-        args[arg_count] = NULL;
+        foreground_pid = -1;
+        strcpy(cmd_name, "");
+        return builtin_commands_ptr[builtin_command](args, arg_count);
     }
+
+    free(args[arg_count]);
+    args[arg_count] = NULL;
 
     int pid = fork();
 
@@ -42,48 +47,50 @@ int execute_command(char **args, int arg_count)
 
     if (pid == 0)
     {
-        if (builtin_command == -1)
-        {
-            int res = execvp(args[0], args);
+        setpgid(0, 0);
+        int res = execvp(args[0], args);
 
-            if (res == -1)
-            {
-                perror("execvp() error");
-                exit(EXIT_FAILURE);
-            }
+        if (res == -1)
+        {
+            perror("execvp() error");
+            exit(EXIT_FAILURE);
         }
 
         exit(EXIT_SUCCESS);
     }
     else
     {
-
-        // https://stackoverflow.com/questions/33508997/waitpid-wnohang-wuntraced-how-do-i-use-these/34845669
         if (is_background == 0)
         {
+            foreground_pid = pid;
             int wstatus;
             if (waitpid(-1, &wstatus, WUNTRACED) == -1)
             {
                 perror("waitpid() error");
             }
-            // block parents execution and set status when process suspended/terminated/killed.
 
             if (WIFEXITED(wstatus))
             {
                 int status = WEXITSTATUS(wstatus);
-
                 if (status == EXIT_FAILURE)
                 {
+                    foreground_pid = -1;
                     return EXIT_FAILURE;
                 }
             }
         }
-
-        if (builtin_command != -1)
+        else
         {
-            return builtin_commands_ptr[builtin_command](args, arg_count);
+            int rc = add_background_jobs(args[0], pid);
+
+            if (rc == EXIT_FAILURE)
+            {
+                return EXIT_FAILURE;
+            }
         }
     }
 
+    foreground_pid = -1;
+    strcpy(cmd_name, "");
     return EXIT_SUCCESS;
 }

@@ -1,5 +1,4 @@
 #include "headers.h"
-#include "tokenize.h"
 
 char *trim_string(char *str)
 {
@@ -20,21 +19,26 @@ char *trim_string(char *str)
     return str;
 }
 
-commands_t *tokenize_commands(char *cmds)
+int tokenize_commands(char *cmds, char *delimiter, char **tokenized_cmds)
 {
-    commands_t *list = generate_list();
+    char *token = strtok(cmds, delimiter);
 
-    char *s;
-    strcpy(s, cmds);
-
-    char *token = strtok(s, ";");
+    int count = 0;
 
     while (token != NULL)
     {
+        if (count >= BUFFER_SIZE)
+        {
+            fprintf(stderr, "Command limit exceeded\n");
+            return -1;
+        }
+
         token = trim_string(token);
-        insert_command(list, token);
-        token = strtok(NULL, ";");
+
+        strcpy(tokenized_cmds[count], token);
+        token = strtok(NULL, delimiter);
+        ++count;
     }
 
-    return list;
+    return count;
 }

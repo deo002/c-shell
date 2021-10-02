@@ -1,14 +1,8 @@
 #include "headers.h"
-#include "prompt.h"
-#include "tokenize.h"
-#include "commands.h"
-#include "parse.h"
 
 int prompt()
 {
-    size_t alloc_sz = BUFFER_SIZE * sizeof(char);
-
-    char *login_name = (char *)malloc(alloc_sz);
+    char *login_name = (char *)malloc(BUFFER_SIZE);
 
     if (login_name == NULL)
     {
@@ -16,7 +10,7 @@ int prompt()
         return EXIT_FAILURE;
     }
 
-    char *host_name = (char *)malloc(alloc_sz);
+    char *host_name = (char *)malloc(BUFFER_SIZE);
 
     if (host_name == NULL)
     {
@@ -41,7 +35,7 @@ int prompt()
         perror("Error getting hostname");
     }
 
-    char *path = (char *)malloc(alloc_sz);
+    char *path = (char *)malloc(BUFFER_SIZE);
 
     if (path == NULL)
     {
@@ -49,7 +43,7 @@ int prompt()
         return EXIT_FAILURE;
     }
 
-    if (getcwd(path, alloc_sz) != NULL)
+    if (getcwd(path, BUFFER_SIZE) != NULL)
     {
         char *homedir = getenv("HOME");
         int len = strlen(homedir);
@@ -79,17 +73,17 @@ int prompt()
     return EXIT_SUCCESS;
 }
 
-void readline()
+char *readline()
 {
-    char *command = (char *)malloc(BUFFER_SIZE * sizeof(char));
+    char *command = (char *)malloc(BUFFER_SIZE);
 
     if (command == NULL)
     {
         fprintf(stderr, "Error allocating memory");
-        return;
+        return command;
     }
 
-    size_t sz = BUFFER_SIZE * sizeof(char);
+    size_t sz = BUFFER_SIZE;
 
     if (getline(&command, &sz, stdin) == -1)
     {
@@ -101,18 +95,5 @@ void readline()
         command[strlen(command) - 1] = '\0';
     }
 
-    fflush(stdout);
-
-    commands_t *list = tokenize_commands(command);
-
-    commands_rec_t *ptr = list->head;
-
-    while (ptr != NULL)
-    {
-        int rc = parse_command(ptr->command);
-        ptr = ptr->next;
-    }
-
-    delete_commands(list);
-    free(command);
+    return command;
 }
