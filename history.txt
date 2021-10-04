@@ -1,21 +1,21 @@
 20
-jobs
-fg 1
+cat shell.c > d.txt
+quit
+cat < shell.c
+cat < shell.c > d.txt
+ls -l | wc > d.txt
+sort < shell.c | wc -l >> d.txt
+pinfo
+pwd
+ls
+ls -a -l
+nightswatch -n 2 newborn
 clear
 quit
-ls
-clear
-emacs &
-jobs
-emacs
-jobs
-bg 2
-jobs
-fg 1
-jobs
-kill 1 9
-kill 9 1
-kjon 1 9
-kjob 1 9
-jobs
+ls | wc
+ls | wc -l
+quit
+ls | wc
+cat < tokenize.c > d.txt
+rm d.txt
 quit

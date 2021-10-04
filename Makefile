@@ -1,5 +1,5 @@
-output: shell.o tokenize.o parse.o builtin.o execute_command.o signal_handlers.o prompt.o ls.o nightswatch.o history.o user_defined_commands.o
-	gcc -g shell.o tokenize.o parse.o builtin.o execute_command.o signal_handlers.o prompt.o ls.o nightswatch.o history.o user_defined_commands.o -o exe
+output: shell.o tokenize.o parse.o builtin.o execute_command.o signal_handlers.o prompt.o ls.o nightswatch.o history.o user_defined_commands.o simple_commands_util.o pipe_redirection.o
+	gcc -g shell.o tokenize.o parse.o builtin.o execute_command.o signal_handlers.o prompt.o ls.o nightswatch.o history.o user_defined_commands.o simple_commands_util.o pipe_redirection.o -o exe
 
 shell.o: shell.c
 	gcc -g -c shell.c
@@ -24,6 +24,12 @@ builtin.o: builtin.c
 
 prompt.o: prompt.c
 	gcc -g -c prompt.c
+
+pipe_redirection.o: pipe_redirection.c
+	gcc -g -c pipe_redirection.c
+
+simple_commands_util.o: simple_commands_util.c
+	gcc -g -c simple_commands_util.c
 
 user_defined_commands.o: user_defined_commands.c
 	gcc -g -c user_defined_commands.c

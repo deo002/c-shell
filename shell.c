@@ -5,6 +5,8 @@ int main(int argc, char **argv)
     foreground_pid = -1;
     cur_jobs = 0;
     strcpy(cmd_name, "");
+    head = NULL;
+    tail = NULL;
 
     if (getcwd(PATH_TO_HISTORY_FILE, BUFFER_SIZE) == NULL)
     {

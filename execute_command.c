@@ -13,8 +13,24 @@ int check_builtin_command(char *cmd)
     return -1;
 }
 
+int check_piping_and_redirection(char **args, int arg_count)
+{
+    for (int i = 0; i < arg_count; ++i)
+    {
+        if (strcmp(args[i], ">") == 0 || strcmp(args[i], ">>") == 0 || strcmp(args[i], "<") == 0 || strcmp(args[i], "|") == 0)
+            return 1;
+    }
+
+    return 0;
+}
+
 int execute_command(char **args, int arg_count)
 {
+    if (check_piping_and_redirection(args, arg_count) == 1)
+    {
+        return piping_and_redirection(args, arg_count);
+    }
+
     strcpy(cmd_name, args[0]);
 
     int builtin_command = check_builtin_command(args[0]);

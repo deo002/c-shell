@@ -41,6 +41,23 @@ static struct background_jobs ongoing_background_jobs[MAX_JOBS];
 
 int cur_jobs;
 
+struct simple_commands
+{
+    int cnt_args;
+    char *cmd[BUFFER_SIZE];
+    struct simple_commands *next;
+};
+
+struct simple_commands *head, *tail;
+
+struct simple_commands *create_new_command();
+void add_new_command(struct simple_commands *node);
+void pop_command();
+void show_commands();
+void clear_commands();
+
+int piping_and_redirection(char **args, int arg_count);
+
 int execute_command(char **args, int);
 int check_builtin_command(char *cmd);
 
