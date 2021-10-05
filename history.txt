@@ -1,21 +1,21 @@
 20
-cat shell.c > d.txt
 quit
-cat < shell.c
-cat < shell.c > d.txt
-ls -l | wc > d.txt
-sort < shell.c | wc -l >> d.txt
 pinfo
 pwd
-ls
-ls -a -l
+ls -l | wc -l > d.txt
+cat < d.txt
 nightswatch -n 2 newborn
-clear
-quit
-ls | wc
-ls | wc -l
-quit
-ls | wc
-cat < tokenize.c > d.txt
-rm d.txt
+cd
+cd os/mkfiles
+cd
+emacs &
+jobs
+./a.out
+g++ a.cpp
+./a.out
+g++ trial.cpp
+./a.out
+gedit &
+jobs
+fg 1
 quit
